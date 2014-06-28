@@ -4,6 +4,8 @@
  * Controls the syncing of Drupal entities to MongoDB collections
  */
 
+include 'classes/MongoDBEntity.php';
+
 /**
  * Implements hook_permission().
  */
