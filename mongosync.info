@@ -1,0 +1,7 @@
+name = MongoSync
+description = Syncs Entities to a MongoDB Collections
+package = MongoSync
+version = VERSION
+core = 7.x
+
+configure = admin/config/mongosync

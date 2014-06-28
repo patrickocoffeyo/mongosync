@@ -1,0 +1,32 @@
+<?php
+/**
+ * @file
+ * Controls the syncing of Drupal entities to MongoDB collections
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function mongosync_permission() {
+  return array(
+    'administer mongosync' => array(
+      'title' => t('Administer Mongosync'),
+    ),
+  );
+}
+
+/**
+ * Impliments hook_menu()
+ */
+function mongosync_menu() {
+  $items['admin/config/mongosync'] = array(
+    'title' => 'Mongosync',
+    'description' => 'Configure Entity -> MongoDB Collection syncing',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mongosync_admin_form'),
+    'access arguments' => array('administer mongosync'),
+    'file' => 'mongosync.admin.inc',
+  );
+
+  return $items;
+}
