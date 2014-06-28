@@ -1,0 +1,22 @@
+<?php
+/**
+ * Impliments hook_uninstall()
+ */
+function mongosync_uninstall() {
+
+  // Cleanup variables
+  $variables = array(
+    'mongosync_host',
+    'mongosync_user',
+    'mongosync_pwd'
+  );
+
+  foreach (entity_get_info() as $entity_name => $entity) {
+    array_push($variables, 'mongosync_entity_'.$entity_name.'_sync',
+                           'mongosync_entity_'.$entity_name.'_collection');
+  }
+
+  foreach ($variables as $variable) {
+    variable_del($variable);
+  }
+}
