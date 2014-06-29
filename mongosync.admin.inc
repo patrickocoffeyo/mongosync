@@ -1,38 +1,44 @@
 <?php
 
 /**
- * Menu callback for admin/config/mongosync
+ * Menu callback for admin/config/mongosync.
  */
 function mongosync_admin_form($form, &$form_state) {
 
-  // MongoDB Server Settings Form
+  // MongoDB Server Settings Form.
   $form['mongosync_server'] = array(
     '#type' => 'fieldset',
     '#title' => t('MongoDB Server'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Server settings for the MongoDB instance that this module will sync entities to')
+    '#description' => t('Server settings for the MongoDB instance that this module will sync entities to.')
   );
   $form['mongosync_server']['mongosync_host'] = array(
     '#type' => 'textfield',
     '#title' => t('Host'),
     '#default_value' => variable_get('mongosync_host'),
-    '#description' => t('Server url for your MongoDB instance. Do not include "mongodb://". (Example: localhost)')
+    '#description' => t('Server url for your MongoDB instance. Do not include "mongodb://". (Example: localhost).')
+  );
+  $form['mongosync_server']['mongosync_db'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Database'),
+    '#default_value' => variable_get('mongosync_db'),
+    '#description' => t('MongoDB database that this module will push entities to.')
   );
   $form['mongosync_server']['mongosync_user'] = array(
     '#type' => 'textfield',
     '#title' => t('User'),
     '#default_value' => variable_get('mongosync_user'),
-    '#description' => t('Username that should be used when connecting to MongoDB')
+    '#description' => t('Username that should be used when connecting to MongoDB.')
   );
   $form['mongosync_server']['mongosync_pwd'] = array(
     '#type' => 'textfield',
     '#title' => t('Password'),
     '#default_value' => variable_get('mongosync_password'),
-    '#description' => t('Password that should be used when connecting to MongoDB')
+    '#description' => t('Password that should be used when connecting to MongoDB.')
   );
 
-  // Entity Sync Settings Form
+  // Entity Sync Settings Form.
   $form['mongosync_entities'] = array(
     '#type' => 'fieldset',
     '#title' => t('Entity Sync Settings'),
