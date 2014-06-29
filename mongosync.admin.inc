@@ -34,7 +34,7 @@ function mongosync_admin_form($form, &$form_state) {
   $form['mongosync_server']['mongosync_pwd'] = array(
     '#type' => 'textfield',
     '#title' => t('Password'),
-    '#default_value' => variable_get('mongosync_password'),
+    '#default_value' => variable_get('mongosync_pwd'),
     '#description' => t('Password that should be used when connecting to MongoDB.')
   );
 
