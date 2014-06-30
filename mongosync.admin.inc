@@ -62,7 +62,7 @@ function mongosync_admin_form($form, &$form_state) {
     $es['mongosync_entity_'.$entity_name.'_collection'] = array(
       '#type' => 'textfield',
       '#title' => t('Collection Name'),
-      '#default_value' => variable_get('mongosync_entity_'.$entity_name.'_collection'),
+      '#default_value' => variable_get('mongosync_entity_'.$entity_name.'_collection', $entity_name),
       '#description' => t('If syncing is turned on for @entitys, it will be synced to a MongoDB collection with this name. (Example: node)', array('@entity' => $entity_name))
     );
   }

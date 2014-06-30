@@ -32,3 +32,61 @@ function mongosync_menu() {
 
   return $items;
 }
+
+/**
+ * Creates and returns a new MongoDBEntity object
+ */
+function mongosync_new_mongodbentity() {
+  $mongo = new MongoDBEntity(
+    variable_get('mongosync_host'),
+    variable_get('mongosync_db'),
+    variable_get('mongosync_user'),
+    variable_get('mongosync_pwd')
+  );
+
+  return $mongo;
+}
+
+/**
+ * Checks to see if entity sync is enabled for the given entity
+ * @param (string) $entity_name type of entity
+ */
+function mongosync_is_enabled($entity_name) {
+  return variable_get('mongosync_entity_'.$entity_name.'_sync') ? TRUE : FALSE;
+}
+
+/**
+ * Fetches and returns the collection name for the given entity
+ * @param (string) $entity_name type of entity
+ */
+function mongosync_get_entity_collection($entity_name) {
+  return variable_get('mongosync_entity_'.$entity_name.'_collection');
+}
+
+
+/**
+ * Impliments hook_entity_insert()
+ */
+function mongosync_entity_insert($entity, $type) {
+  if (!mongosync_is_enabled($type)) { return; }
+
+  $collection = mongosync_get_entity_collection($type);
+  $mongo->createEntity($entity, $collection);
+}
+
+/**
+ * Impliments hook_entity_update()
+ */
+function mongosync_entity_update($entity, $type) {
+  if (!mongosync_is_enabled($type)) { return; }
+}
+
+/**
+ * Impliments hook_entity_delete()
+ */
+function mongosync_entity_delete($entity, $type) {
+  if (!mongosync_is_enabled($type)) { return; }
+
+  $collection = mongosync_get_entity_collection($type);
+  $mongo->deleteEntity($entity, $collection);
+}

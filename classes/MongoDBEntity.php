@@ -33,8 +33,18 @@ class MongoDBEntity {
    * @param (object) $entity entity that we will send to the mongo collection
    * @param (string) $collection collection that we will send the entity to
    */
-  public function pushEntity($entity, $collection) {
+  public function createEntity($entity, $collection) {
     $collection = $this->db->{$collection};
     $collection->insert($entity);
+  }
+
+  /**
+   * Deletes a document representing an entity from a MongoDB Collection
+   * @param (integer) $id entity ID assigned to the document that we will be removing. (NOT document ID)
+   * @param (string) $collection collection containing document we are deleting
+   */
+  public function deleteEntity($id, $collection) {
+    $collection = $this->db->{$collection};
+    $collection->remove(array('entity_id' => $id));
   }
 }
