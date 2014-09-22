@@ -54,7 +54,7 @@ class MongoDBEntity {
     );
 
     $this->mongo = new MongoClient("mongodb://{$host}", $options);
-    $this->db &= $this->mongo->{$db};
+    $this->db = $this->mongo->{$db};
   }
 
   /**

@@ -5,6 +5,7 @@
  */
 
 include 'classes/MongoDBEntity.php';
+include 'mongosync.api.inc';
 
 /**
  * Implements hook_permission().
@@ -88,6 +89,12 @@ function mongosync_entity_insert($entity, $type) {
     $collection = ucwords($bundle);
   }
 
+  // Set entity_id property.
+  $entity->entity_id = $id;
+
+  // Invoke processsing hooks.
+  $entity = module_invoke_all('mongosync_entity_insert', $entity, $type, $bundle);
+
   // Create new instance of MongoDBEntity.
   $mongo = mongosync_new_mongodbentity();
 
@@ -99,15 +106,46 @@ function mongosync_entity_insert($entity, $type) {
  * Impliments hook_entity_update()
  */
 function mongosync_entity_update($entity, $type) {
-  if (!mongosync_is_enabled($type)) { return; }
+  // For now, do nothing.
+  return;
+  // Extract entity IDs and bundle.
+  list($id, $vid, $bundle) = entity_extract_ids($type, $entity);
+
+  // Check to see if mongosync is enabled for this entity.
+  if (!mongosync_is_enabled($type, $bundle)) {
+    return;
+  }
+
+  // Set entity_id property.
+  $entity->entity_id = $id;
+
+  // Invoke processsing hooks.
+  $entity = module_invoke_all('mongosync_entity_update', $entity, $type, $bundle);
+
+  // Create new instance of MongoDBEntity.
+  $mongo = mongosync_new_mongodbentity();
 }
 
 /**
  * Impliments hook_entity_delete()
  */
 function mongosync_entity_delete($entity, $type) {
-  if (!mongosync_is_enabled($type)) { return; }
+  // For now, do nothing.
+  return;
+  // Extract entity IDs and bundle.
+  list($id, $vid, $bundle) = entity_extract_ids($type, $entity);
+
+  // Check to see if mongosync is enabled for this entity.
+  if (!mongosync_is_enabled($type, $bundle)) {
+    return;
+  }
+
+  // Invoke processsing hooks.
+  $entity = module_invoke_all('mongosync_entity_delete', $entity, $type, $bundle);
+
+  // Create new instance of MongoDBEntity.
+  $mongo = mongosync_new_mongodbentity();
 
   $collection = mongosync_get_entity_collection($type);
-  $mongo->deleteEntity($entity, $collection);
+  //$mongo->deleteEntity($entity, $collection);
 }
