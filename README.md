@@ -13,6 +13,12 @@ Mongo sync is a project that allows a Drupal instance to easily send entitys of 
 8. Insert an entity of the type and bundle you specified.
 9. Verify that entities are being added to MongoDB collection.
 
+##Installing PHP MongoDB Drivers
+1. If pear and pecl are not installed, [install it](http://pear.php.net/manual/en/installation.php).
+2. Install php mongodb drivers with pecl: ```sudo pecl install mongo```
+3. Add ```extension=mongo.so``` to php.ini. 
+4. Restart your web server (Apache or Nginx).
+
 ##Installing MongoDB
 Follow the [installation instructions](http://docs.mongodb.org/manual/installation/) for your operating system on the official MongoDB documentation website.
 

@@ -65,7 +65,7 @@ function mongosync_is_enabled($entity_name, $entity_bundle) {
  * @param string $entity_bundle
  *   Machine name of bundle for which a collection name should be fetched.
  */
-function mongosync_get_entity_collection($entity_name) {
+function mongosync_get_entity_collection($entity_name, $entity_bundle) {
   return variable_get('mongosync_entity_' . $entity_name . '_bundle_' . $entity_bundle . '_collection');
 }
 
@@ -74,9 +74,24 @@ function mongosync_get_entity_collection($entity_name) {
  * Impliments hook_entity_insert().
  */
 function mongosync_entity_insert($entity, $type) {
-  if (!mongosync_is_enabled($type)) { return; }
+  // Extract entity IDs and bundle.
+  list($id, $vid, $bundle) = entity_extract_ids($type, $entity);
 
-  $collection = mongosync_get_entity_collection($type);
+  // Check to see if mongosync is enabled for this entity.
+  if (!mongosync_is_enabled($type, $bundle)) {
+    return;
+  }
+
+  // Load collection. If none, default to bundle.
+  $collection = mongosync_get_entity_collection($type, $bundle);
+  if (!$collection) {
+    $collection = ucwords($bundle);
+  }
+
+  // Create new instance of MongoDBEntity.
+  $mongo = mongosync_new_mongodbentity();
+
+  // Create entity in MongoDB.
   $mongo->createEntity($entity, $collection);
 }
 
