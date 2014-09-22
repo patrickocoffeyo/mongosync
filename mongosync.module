@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Controls the syncing of Drupal entities to MongoDB collections
+ * Controls the syncing of Drupal entities to MongoDB collections.
  */
 
 include 'classes/MongoDBEntity.php';
@@ -34,38 +34,44 @@ function mongosync_menu() {
 }
 
 /**
- * Creates and returns a new MongoDBEntity object
+ * Creates and returns a new MongoDBEntity object.
  */
 function mongosync_new_mongodbentity() {
-  $mongo = new MongoDBEntity(
+  return new MongoDBEntity(
     variable_get('mongosync_host'),
     variable_get('mongosync_db'),
     variable_get('mongosync_user'),
     variable_get('mongosync_pwd')
   );
-
-  return $mongo;
 }
 
 /**
- * Checks to see if entity sync is enabled for the given entity
- * @param (string) $entity_name type of entity
+ * Checks to see if entity sync is enabled for the given entity.
+ *
+ * @param string $entity_name
+ *   Machine name of entity that should be checked.
+ * @param string $entity_bundle
+ *   Machine name of bundle that should be checked.
  */
-function mongosync_is_enabled($entity_name) {
-  return variable_get('mongosync_entity_'.$entity_name.'_sync') ? TRUE : FALSE;
+function mongosync_is_enabled($entity_name, $entity_bundle) {
+  return variable_get('mongosync_entity_' . $entity_name . '_bundle_' . $entity_bundle . '_sync') ? TRUE : FALSE;
 }
 
 /**
- * Fetches and returns the collection name for the given entity
- * @param (string) $entity_name type of entity
+ * Fetches and returns the collection name assigned to the given entity.
+ *
+ * @param string $entity_name
+ *   Machine name of entity for which a collection name should be fetched.
+ * @param string $entity_bundle
+ *   Machine name of bundle for which a collection name should be fetched.
  */
 function mongosync_get_entity_collection($entity_name) {
-  return variable_get('mongosync_entity_'.$entity_name.'_collection');
+  return variable_get('mongosync_entity_' . $entity_name . '_bundle_' . $entity_bundle . '_collection');
 }
 
 
 /**
- * Impliments hook_entity_insert()
+ * Impliments hook_entity_insert().
  */
 function mongosync_entity_insert($entity, $type) {
   if (!mongosync_is_enabled($type)) { return; }
