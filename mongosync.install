@@ -4,7 +4,7 @@
  */
 function mongosync_uninstall() {
 
-  // Cleanup variables
+  // Create an array of variables that should be deleted.
   $variables = array(
     'mongosync_host',
     'mongosync_db',
@@ -12,11 +12,15 @@ function mongosync_uninstall() {
     'mongosync_pwd'
   );
 
+  // Add entity/bundle sync settings to vars.
   foreach (entity_get_info() as $entity_name => $entity) {
-    array_push($variables, 'mongosync_entity_'.$entity_name.'_sync',
-                           'mongosync_entity_'.$entity_name.'_collection');
+    foreach ($entity['bundles'] as $bundle_name => $bundle) {
+      array_push($variables, 'mongosync_entity_'.$entity_name.'_bundle_'.$bundle_name.'_sync',
+                             'mongosync_entity_'.$entity_name.'_bundle_'.$bundle_name.'_collection');
+    }
   }
 
+  // Loop through variables and delete each one.
   foreach ($variables as $variable) {
     variable_del($variable);
   }
