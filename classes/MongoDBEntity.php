@@ -62,14 +62,18 @@ class MongoDBEntity {
   /**
    * Pushes an entity to a MongoDB Collection.
    *
-   * @param object $entity
-   *   Entity that will be sent to the mongo collection.
+   * @param array $entities
+   *   Entity objects that will be sent to the mongo collection.
    * @param string $collection
    *   Collection that entities will be pushed into.
    */
-  public function createEntity($entity, $collection) {
+  public function createEntities($entities, $collection) {
+    // Fetch MongoCollection.
     $collection = $this->db->{$collection};
-    $collection->insert($entity);
+    // Loop through entities and insert them into MongoDB Collection.
+    foreach ($entities as $entity) {
+      $collection->insert($entity);
+    }
   }
 
   /**
@@ -81,7 +85,9 @@ class MongoDBEntity {
    *   Collection containing document that will be deleted.
    */
   public function deleteEntity($id, $collection) {
+    // Fetch MongoCollection.
     $collection = $this->db->{$collection};
+    // Remove the entity from MongoDB collection.
     $collection->remove(array('entity_id' => $id));
   }
 }

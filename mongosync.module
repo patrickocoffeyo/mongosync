@@ -96,7 +96,7 @@ function mongosync_entity_insert($entity, $type) {
     $mongo = mongosync_new_mongodbentity();
 
     // Create entity in MongoDB.
-    $mongo->createEntity($entity, $collection);
+    $mongo->createEntities($entity, $collection);
   }
 }
 
