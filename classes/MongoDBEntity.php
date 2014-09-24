@@ -47,11 +47,13 @@ class MongoDBEntity {
    * @param string $pwd
    *   Password for $user.
    */
-  function __construct($host, $db, $user, $pwd) {
-    $options = array(
-      'username' => $user,
-      'password' => $pwd
-    );
+  function __construct($host, $db, $user = NULL, $pwd = NULL) {
+    // Construct connection options.
+    $options = array();
+    if ($user && $pwd) {
+      $options['username'] = $user;
+      $options['password'] = $pwd;
+    }
 
     $this->mongo = new MongoClient("mongodb://{$host}", $options);
     $this->db = $this->mongo->{$db};

@@ -22,25 +22,25 @@ function mongosync_admin_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Host'),
     '#default_value' => variable_get('mongosync_host'),
-    '#description' => t('Server url for your MongoDB instance. Do not include "mongodb://". (Example: localhost).'),
+    '#description' => t('Server url for your MongoDB instance. Do not include "mongodb://". (Example: localhost:3002).'),
   );
   $form['mongosync_server']['mongosync_db'] = array(
     '#type' => 'textfield',
     '#title' => t('Database'),
-    '#default_value' => variable_get('mongosync_db'),
+    '#default_value' => variable_get('mongosync_db', 'drupal'),
     '#description' => t('MongoDB database that this module will push entities to.'),
   );
   $form['mongosync_server']['mongosync_user'] = array(
     '#type' => 'textfield',
     '#title' => t('User'),
     '#default_value' => variable_get('mongosync_user'),
-    '#description' => t('Username that should be used when connecting to MongoDB.'),
+    '#description' => t('Username that should be used when connecting to MongoDB. Leave empty for anonymous.'),
   );
   $form['mongosync_server']['mongosync_pwd'] = array(
     '#type' => 'textfield',
     '#title' => t('Password'),
     '#default_value' => variable_get('mongosync_pwd'),
-    '#description' => t('Password that should be used when connecting to MongoDB.'),
+    '#description' => t('Password that should be used when connecting to MongoDB. Leave empty for anonymous.'),
   );
 
   // Entity/bundle sync settings form.
