@@ -1,0 +1,6 @@
+name: MongoSync
+description: 'Syncs Entities to a MongoDB Collections'
+package: MongoSync
+version: 8.x-0.1
+core: 8.x
+type: module

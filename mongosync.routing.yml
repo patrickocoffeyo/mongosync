@@ -1,0 +1,7 @@
+mongosync.admin_form:
+  path: /admin/config/mongosync
+  defaults:
+    _title: Mongosync
+    _form: \Drupal\mongosync\Form\MongosyncAdminForm
+  requirements:
+    _permission: 'administer mongosync'

@@ -38,11 +38,27 @@ function mongosync_menu() {
  * Creates and returns a new MongoDBEntity object.
  */
 function mongosync_new_mongodbentity() {
-  return new MongoDBEntity(
-    variable_get('mongosync_host'),
-    variable_get('mongosync_db'),
-    variable_get('mongosync_user'),
-    variable_get('mongosync_pwd')
+  // @FIXME
+// Could not extract the default value because it is either indeterminate, or
+// not scalar. You'll need to provide a default value in
+// config/install/mongosync.settings.yml and config/schema/mongosync.schema.yml.
+// @FIXME
+// Could not extract the default value because it is either indeterminate, or
+// not scalar. You'll need to provide a default value in
+// config/install/mongosync.settings.yml and config/schema/mongosync.schema.yml.
+// @FIXME
+// Could not extract the default value because it is either indeterminate, or
+// not scalar. You'll need to provide a default value in
+// config/install/mongosync.settings.yml and config/schema/mongosync.schema.yml.
+// @FIXME
+// Could not extract the default value because it is either indeterminate, or
+// not scalar. You'll need to provide a default value in
+// config/install/mongosync.settings.yml and config/schema/mongosync.schema.yml.
+return new MongoDBEntity(
+    \Drupal::config('mongosync.settings')->get('mongosync_host'),
+    \Drupal::config('mongosync.settings')->get('mongosync_db'),
+    \Drupal::config('mongosync.settings')->get('mongosync_user'),
+    \Drupal::config('mongosync.settings')->get('mongosync_pwd')
   );
 }
 
@@ -55,7 +71,12 @@ function mongosync_new_mongodbentity() {
  *   Machine name of bundle that should be checked.
  */
 function mongosync_is_enabled($entity_name, $entity_bundle) {
-  return variable_get('mongosync_entity_' . $entity_name . '_bundle_' . $entity_bundle . '_sync') ? TRUE : FALSE;
+  // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// return variable_get('mongosync_entity_' . $entity_name . '_bundle_' . $entity_bundle . '_sync') ? TRUE : FALSE;
+
 }
 
 /**
@@ -67,7 +88,12 @@ function mongosync_is_enabled($entity_name, $entity_bundle) {
  *   Machine name of bundle for which a collection name should be fetched.
  */
 function mongosync_get_entity_collection($entity_name, $entity_bundle) {
-  $collection  = variable_get('mongosync_entity_' . $entity_name . '_bundle_' . $entity_bundle . '_collection');
+  // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// $collection  = variable_get('mongosync_entity_' . $entity_name . '_bundle_' . $entity_bundle . '_collection');
+
   if (!$collection) {
     $collection = $entity_name;
   }
@@ -90,7 +116,7 @@ function mongosync_entity_insert($entity, $type) {
     $entity->entity_id = $id;
 
     // Invoke processsing hooks.
-    $entity = module_invoke_all('mongosync_entity_insert', $entity, $type, $bundle);
+    $entity = \Drupal::moduleHandler()->invokeAll('mongosync_entity_insert', [$entity, $type, $bundle]);
 
     // Create new instance of MongoDBEntity.
     $mongo = mongosync_new_mongodbentity();
@@ -108,7 +134,7 @@ function mongosync_entity_delete($entity, $type) {
   list($id, $vid, $bundle) = entity_extract_ids($type, $entity);
   if (mongosync_is_enabled($type, $bundle)) {
     // Invoke processsing hooks.
-    $entity = module_invoke_all('mongosync_entity_delete', $entity, $type, $bundle);
+    $entity = \Drupal::moduleHandler()->invokeAll('mongosync_entity_delete', [$entity, $type, $bundle]);
 
     // Fetch the collection.
     $collection = mongosync_get_entity_collection($type, $bundle);

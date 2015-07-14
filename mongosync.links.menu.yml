@@ -1,0 +1,5 @@
+mongosync.admin_form:
+  route_name: mongosync.admin_form
+  title: Mongosync
+  description: 'Configure Entity -> MongoDB Collection syncing'
+  parent: system.admin_config

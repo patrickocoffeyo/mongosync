@@ -1,9 +1,0 @@
-name = MongoSync
-description = Syncs Entities to a MongoDB Collections
-package = MongoSync
-version = 7.x-0.1
-core = 7.x
-
-configure = admin/config/mongosync
-
-files[] = mongosync.api.inc

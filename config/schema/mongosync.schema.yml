@@ -1,0 +1,6 @@
+mongosync.settings:
+  type: mapping
+  label: Settings
+  mapping:
+    mongosync_db:
+      type: string
