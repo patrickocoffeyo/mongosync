@@ -1,5 +1,6 @@
 mongosync.admin_form:
+  title: 'Mongosync Configuration'
+  description: 'Manage Mongodb connection details, and syncing settings.'
+  parent: system.admin_config_development
   route_name: mongosync.admin_form
-  title: Mongosync
-  description: 'Configure Entity -> MongoDB Collection syncing'
-  parent: system.admin_config
+  menu_name: devel
