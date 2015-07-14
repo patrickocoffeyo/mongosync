@@ -25,15 +25,11 @@ class MongosyncAdminForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('mongosync.settings');
-
-    foreach (Element::children($form) as $variable) {
-      $config->set($variable, $form_state->getValue($form[$variable]['#parents']));
+    $values = $form_state->getValues();
+    foreach ($values as $name => $value) {
+      $config->set($name, $value);
     }
     $config->save();
-
-    if (method_exists($this, '_submitForm')) {
-      $this->_submitForm($form, $form_state);
-    }
 
     parent::submitForm($form, $form_state);
   }
@@ -49,10 +45,9 @@ class MongosyncAdminForm extends ConfigFormBase {
 
     // MongoDB Server Settings Form.
     $form['mongosync_server'] = [
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('MongoDB Server'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
+      '#open' => TRUE,
       '#description' => t('Server settings for the MongoDB instance that this module will sync entities to.'),
     ];
     $form['mongosync_server']['mongosync_host'] = [
@@ -92,12 +87,11 @@ class MongosyncAdminForm extends ConfigFormBase {
     foreach(\Drupal::entityManager()->getAllBundleInfo() as $entity_name => $entity) {
       $entity_settings = & $form['mongosync_entities']['mongosync_entity_' . $entity_name];
       $entity_settings = [
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('@entity settings', [
           '@entity' => $entity_name,
         ]),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
+        '#open' => FALSE,
       ];
       foreach ($entity as $bundle_name => $bundle) {
         // Labels that can be passed into t().
@@ -108,10 +102,9 @@ class MongosyncAdminForm extends ConfigFormBase {
         // Create settings form fieldset
         $bundle_settings = & $form['mongosync_entities']['mongosync_entity_' . $entity_name]['mongosync_entity_' . $entity_name . '_bundle_' . $bundle_name];
         $bundle_settings = [
-          '#type' => 'fieldset',
+          '#type' => 'details',
           '#title' => t('@entity of Type @bundle Sync Settings', $labels),
-          '#collapsible' => TRUE,
-          '#collapsed' => TRUE,
+          '#open' => FALSE,
         ];
         $bundle_settings['mongosync_entity_' . $entity_name . '_bundle_' . $bundle_name . '_sync'] = array(
           '#type' => 'checkbox',
