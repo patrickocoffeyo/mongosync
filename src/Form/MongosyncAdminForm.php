@@ -45,7 +45,7 @@ class MongosyncAdminForm extends ConfigFormBase {
     return ['mongosync.settings'];
   }
 
-  public function buildForm(array $form, \Drupal\Core\Form\FormStateInterface &$form_state) {
+  public function buildForm(array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
 
     // MongoDB Server Settings Form.
     $form['mongosync_server'] = [
@@ -89,21 +89,21 @@ class MongosyncAdminForm extends ConfigFormBase {
     ];
 
     // Loop through entities/bundles and add form elements.
-    foreach (\Drupal::entityManager()->getDefinitions() as $entity_name => $entity) {
+    foreach(\Drupal::entityManager()->getAllBundleInfo() as $entity_name => $entity) {
       $entity_settings = & $form['mongosync_entities']['mongosync_entity_' . $entity_name];
       $entity_settings = [
         '#type' => 'fieldset',
-        '#title' => t('@entity Sync Settings', [
-          '@entity' => $entity['label']
-          ]),
+        '#title' => t('@entity settings', [
+          '@entity' => $entity_name,
+        ]),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
       ];
-      foreach ($entity['bundles'] as $bundle_name => $bundle) {
+      foreach ($entity as $bundle_name => $bundle) {
         // Labels that can be passed into t().
         $labels = [
-          '@entity' => isset($entity['label']) ? $entity['label'] : $entity_name,
-          '@bundle' => isset($bundle['label']) ? $bundle['label'] : $bundle_name,
+          '@entity' => $entity_name,
+          '@bundle' => $bundle_name,
         ];
         // Create settings form fieldset
         $bundle_settings = & $form['mongosync_entities']['mongosync_entity_' . $entity_name]['mongosync_entity_' . $entity_name . '_bundle_' . $bundle_name];
@@ -113,6 +113,17 @@ class MongosyncAdminForm extends ConfigFormBase {
           '#collapsible' => TRUE,
           '#collapsed' => TRUE,
         ];
+        $bundle_settings['mongosync_entity_' . $entity_name . '_bundle_' . $bundle_name . '_sync'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('Sync @entitys of type @bundle?', $labels),
+          '#default_value' => \Drupal::config('mongosync.settings')->get('mongosync_entity_' . $entity_name . '_bundle_' . $bundle_name . '_sync'),
+        );
+        $bundle_settings['mongosync_entity_' . $entity_name . '_bundle_' . $bundle_name . '_collection'] = array(
+          '#type' => 'textfield',
+          '#title' => t('Collection Name'),
+          '#default_value' => \Drupal::config('mongosync.settings')->get('mongosync_entity_'.$entity_name.'_bundle_'.$bundle_name.'_collection'),
+          '#description' => t('If syncing is turned on for @entitys of type @bundle, it will be synced to a MongoDB collection with this name. (Example: node)', $labels),
+        );
       }
     }
     return parent::buildForm($form, $form_state);
