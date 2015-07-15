@@ -4,7 +4,7 @@
  * Controls the syncing of Drupal entities to MongoDB collections.
  */
 
-include 'classes/MongoDBEntity.php';
+use Drupal\mongosync\MongoDBEntity;
 include 'mongosync.api.inc';
 
 /**
@@ -55,7 +55,7 @@ return new MongoDBEntity(
  *   Machine name of bundle that should be checked.
  */
 function mongosync_is_enabled($entity_name, $entity_bundle) {
-  \Drupal::config('mongosync.settings')->get('mongosync_entity_' . $entity_name . '_bundle_' . $entity_bundle . '_sync') ? TRUE : FALSE;
+  return \Drupal::config('mongosync.settings')->get('mongosync_entity_' . $entity_name . '_bundle_' . $entity_bundle . '_sync') ? TRUE : FALSE;
 }
 
 /**
@@ -80,36 +80,39 @@ function mongosync_get_entity_collection($entity_name, $entity_bundle) {
 /**
  * Impliments hook_entity_insert().
  */
-function mongosync_entity_insert($entity, $type) {
+function mongosync_entity_insert($entity) {
   // Extract entity IDs and bundle.
-  list($id, $vid, $bundle) = entity_extract_ids($type, $entity);
+  $bundle = $entity->bundle();
+  $id = $entity->id();
+  $type = $entity->getEntityTypeId();
+
   if (mongosync_is_enabled($type, $bundle)) {
     // Load collection for entity.
     $collection = mongosync_get_entity_collection($type, $bundle);
 
-    // Set entity_id property.
-    $entity->entity_id = $id;
-
     // Invoke processsing hooks.
-    $entity = \Drupal::moduleHandler()->invokeAll('mongosync_entity_insert', [$entity, $type, $bundle]);
+    $entity = \Drupal::moduleHandler()->invokeAll('mongosync_entity_insert_preprocess', [$entity, $type, $bundle]);
 
     // Create new instance of MongoDBEntity.
     $mongo = mongosync_new_mongodbentity();
 
     // Create entity in MongoDB.
-    $mongo->createEntities($entity, $collection);
+    $mongo->createEntities(array($entity), $collection);
   }
 }
 
 /**
  * Impliments hook_entity_delete()
  */
-function mongosync_entity_delete($entity, $type) {
+function mongosync_entity_delete($entity) {
   // Extract entity IDs and bundle.
-  list($id, $vid, $bundle) = entity_extract_ids($type, $entity);
+  $bundle = $entity->bundle();
+  $id = $entity->id();
+  $type = $entity->getEntityTypeId();
+
   if (mongosync_is_enabled($type, $bundle)) {
     // Invoke processsing hooks.
-    $entity = \Drupal::moduleHandler()->invokeAll('mongosync_entity_delete', [$entity, $type, $bundle]);
+    $entity = \Drupal::moduleHandler()->invokeAll('mongosync_entity_delete_preprocess', [$entity, $type, $bundle]);
 
     // Fetch the collection.
     $collection = mongosync_get_entity_collection($type, $bundle);

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file Defines a class for pushing/pulling entites to/from a MongoDB.
+ */
+
 namespace Drupal\mongosync;
 
 /**
@@ -53,7 +57,7 @@ class MongoDBEntity {
       $options['password'] = $pwd;
     }
 
-    $this->mongo = new MongoClient("mongodb://{$host}", $options);
+    $this->mongo = new \MongoClient("mongodb://{$host}", $options);
     $this->db = $this->mongo->{$db};
   }
 
